@@ -7,9 +7,9 @@ Projekt systemu rezerwacji kortów tenisowych wykonany w ASP.NET Core MVC.
 
 ## Jak uruchomić projekt
 1. Sklonuj repozytorium:
-   `git clone [LINK_DO_TWOJEGO_REPO]`
+   `git clone https://github.com/wojtasekwojtas220/RezerwacjeKortow`
 2. Wejdź do folderu projektu:
-   `cd [NAZWA_FOLDERU]`
+   `cd RezerwacjeKortow`
 3. Przywróć pakiety i zaktualizuj bazę danych:
    `dotnet restore`
    `dotnet ef database update`
