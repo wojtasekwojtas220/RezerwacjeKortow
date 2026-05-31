@@ -1,0 +1,82 @@
+@model IEnumerable<RezerwacjeKortow.Models.RezerwacjaKortu>
+
+<h2 class="mb-4 text-danger fw-bold">Dashboard Administratora</h2>
+
+<div class="row mb-5">
+    <div class="col-md-4">
+        <div class="card text-white bg-warning mb-3 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Oczekujące na decyzję</h5>
+                <p class="card-text display-4 fw-bold">@ViewBag.Oczekujace</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Zatwierdzone łącznie</h5>
+                <p class="card-text display-4 fw-bold">@ViewBag.Zatwierdzone</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-info mb-3 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Gry zaplanowane na dziś</h5>
+                <p class="card-text display-4 fw-bold">@ViewBag.Dzisiejsze</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4 class="mb-3">Zarządzanie wszystkimi rezerwacjami</h4>
+<div class="table-responsive">
+    <table class="table table-hover align-middle shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>Użytkownik</th>
+                <th>Kort</th>
+                <th>Miasto</th>
+                <th>Termin</th>
+                <th>Czas/Koszt</th>
+                <th>Obecny Status</th>
+                <th class="text-end">Zmień Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model) {
+                var koszt = (item.Kort?.CenaZaGodzine ?? 0) * item.CzasTrwania;
+                <tr>
+                    <td>@item.Uzytkownik?.Email</td>
+                    <td class="fw-bold">@item.Kort?.Nazwa</td>
+                    <td>@item.Miasto</td>
+                    <td>@item.DataRozpoczecia.ToString("dd.MM.yyyy HH:mm")</td>
+                    <td>@item.CzasTrwania h <br /> <small class="text-success fw-bold">@koszt PLN</small></td>
+                    <td>
+                        @if(item.Status == RezerwacjeKortow.Models.StatusRezerwacji.Oczekujaca) {
+                            <span class="badge bg-warning text-dark">Oczekująca</span>
+                        } else if(item.Status == RezerwacjeKortow.Models.StatusRezerwacji.Zatwierdzona) {
+                            <span class="badge bg-success">Zatwierdzona</span>
+                        } else if(item.Status == RezerwacjeKortow.Models.StatusRezerwacji.Odrzucona) {
+                            <span class="badge bg-danger">Odrzucona</span>
+                        } else {
+                            <span class="badge bg-secondary">Anulowana</span>
+                        }
+                    </td>
+                    <td class="text-end">
+                        <form asp-action="ZmienStatus" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <input type="hidden" name="nowyStatus" value="Zatwierdzona" />
+                            <button type="submit" class="btn btn-success btn-sm mt-1" @(item.Status == RezerwacjeKortow.Models.StatusRezerwacji.Zatwierdzona ? "disabled" : "")>Zatwierdź</button>
+                        </form>
+                        <form asp-action="ZmienStatus" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <input type="hidden" name="nowyStatus" value="Odrzucona" />
+                            <button type="submit" class="btn btn-danger btn-sm mt-1" @(item.Status == RezerwacjeKortow.Models.StatusRezerwacji.Odrzucona ? "disabled" : "")>Odrzuć</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

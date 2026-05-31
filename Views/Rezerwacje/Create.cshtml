@@ -1,0 +1,104 @@
+@model RezerwacjeKortow.Models.RezerwacjaKortu
+
+<h2 class="mb-4">Rezerwacja: <span class="text-success">@ViewBag.KortNazwa</span></h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow-sm p-4">
+            <form asp-action="Create">
+                <input type="hidden" asp-for="KortId" id="KortId" />
+                <div asp-validation-summary="ModelOnly" class="text-danger fw-bold mb-3"></div>
+                
+                <div class="mb-3">
+                    <label asp-for="Miasto" class="form-label fw-bold"></label>
+                    <select asp-for="Miasto" class="form-select" required>
+                        <option value="">-- Wybierz miasto --</option>
+                        <option value="Warszawa">Warszawa</option>
+                        <option value="Katowice">Katowice</option>
+                        <option value="Gdańsk">Gdańsk</option>
+                        <option value="Kraków">Kraków</option>
+                        <option value="Zielona Góra">Zielona Góra</option>
+                        <option value="Poznań">Poznań</option>
+                    </select>
+                    <span asp-validation-for="Miasto" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="DataGry" class="form-label fw-bold"></label>
+                    <input asp-for="DataGry" id="DataGry" class="form-control" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+                    <span asp-validation-for="DataGry" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="CzasTrwania" class="form-label fw-bold"></label>
+                    <select asp-for="CzasTrwania" id="CzasTrwania" class="form-select">
+                        <option value="1">1 godzina</option>
+                        <option value="2">2 godziny</option>
+                        <option value="3">3 godziny</option>
+                        <option value="4">4 godziny</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="GodzinaGry" class="form-label fw-bold">Dostępne godziny</label>
+                    <select asp-for="GodzinaGry" id="GodzinaGry" class="form-select bg-light border-success text-dark">
+                        <option value="">Ładowanie terminów...</option>
+                    </select>
+                </div>
+                
+                <button type="submit" id="submitBtn" class="btn btn-success btn-lg w-100">Potwierdź rezerwację</button>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary w-100 mt-2">Anuluj</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const kortId = document.getElementById('KortId').value;
+        const miasto = document.getElementById('Miasto'); 
+        const dataGry = document.getElementById('DataGry');
+        const czasTrwania = document.getElementById('CzasTrwania');
+        const godzinaGry = document.getElementById('GodzinaGry');
+        const submitBtn = document.getElementById('submitBtn');
+
+        function odswiezDostepneGodziny() {
+            if (!dataGry.value || !miasto.value) {
+                godzinaGry.innerHTML = '<option value="">Najpierw wybierz miasto i datę...</option>';
+                submitBtn.disabled = true;
+                return;
+            }
+
+            godzinaGry.innerHTML = '<option value="">Szukam terminów...</option>';
+            submitBtn.disabled = true;
+
+            const noCache = new Date().getTime();
+
+            fetch(`/Rezerwacje/GetDostepneGodziny?kortId=${kortId}&dataGry=${dataGry.value}&czasTrwania=${czasTrwania.value}&miasto=${encodeURIComponent(miasto.value)}&_=${noCache}`, { cache: "no-store" })
+                .then(response => response.json())
+                .then(data => {
+                    godzinaGry.innerHTML = '';
+                    if (data.length === 0) {
+                        godzinaGry.innerHTML = '<option value="">Brak wolnych terminów</option>';
+                    } else {
+                        data.forEach(godzina => {
+                            const option = document.createElement('option');
+                            option.value = godzina;
+                            option.textContent = godzina;
+                            godzinaGry.appendChild(option);
+                        });
+                        submitBtn.disabled = false;
+                    }
+                })
+                .catch(err => {
+                    godzinaGry.innerHTML = '<option value="">Błąd ładowania</option>';
+                });
+        }
+
+        miasto.addEventListener('change', odswiezDostepneGodziny);
+        dataGry.addEventListener('change', odswiezDostepneGodziny);
+        czasTrwania.addEventListener('change', odswiezDostepneGodziny);
+
+        odswiezDostepneGodziny();
+    });
+</script>

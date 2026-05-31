@@ -1,0 +1,92 @@
+﻿<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - RezerwacjeKortow</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/RezerwacjeKortow.styles.css" asp-append-version="true" />
+    
+    <style>
+        html, body {
+            min-height: 100vh !important;
+            margin: 0 !important;
+        }
+        body {
+            display: flex !important;
+            flex-direction: column !important;
+            background-color: #121212 !important;
+        }
+        .container {
+            flex: 1 0 auto !important;
+        }
+        .footer {
+            position: relative !important;
+            flex-shrink: 0 !important;
+            height: auto !important;
+            padding: 15px 0 !important;
+            background-color: #121212 !important;
+            border-top: 1px solid #333 !important;
+            color: #cccccc !important;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom border-secondary mb-3 shadow-sm">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold text-success" asp-area="" asp-controller="Home" asp-action="Index">RezerwacjeKortów.pl</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-light fw-bold" asp-area="" asp-controller="Home" asp-action="OpisKortow">Opis Kortów</a>
+                        </li>
+                        
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light fw-bold" asp-area="" asp-controller="Rezerwacje" asp-action="Index">Moje Rezerwacje</a>
+                            </li>
+                        }
+                        
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-warning fw-bold" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Panel Administratora
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="adminDropdown">
+                                    <li><a class="dropdown-item" asp-controller="ZarzadzanieRezerwacjami" asp-action="Index">Dashboard i Rezerwacje</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Korty" asp-action="Index">Zarządzaj Kortami</a></li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer text-muted mt-auto">
+        <div class="container text-center">
+            &copy; 2026 - RezerwacjeKortow
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

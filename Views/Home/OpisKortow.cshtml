@@ -1,0 +1,83 @@
+@model IEnumerable<RezerwacjeKortow.Models.Kort>
+@{
+    ViewData["Title"] = "Opis Kortów";
+    
+    // Zabezpieczenie - pobieramy ID naszych kortów z bazy danych
+    var korty = Model.ToList();
+    var idKort1 = korty.ElementAtOrDefault(0)?.Id ?? 0;
+    var idKort2 = korty.ElementAtOrDefault(1)?.Id ?? 0;
+    var idKort3 = korty.ElementAtOrDefault(2)?.Id ?? 0;
+}
+
+<style>
+    body {
+        background: linear-gradient(rgba(18, 18, 18, 0.75), rgba(18, 18, 18, 0.95)), 
+                    url('https://images.unsplash.com/photo-1542144582-1ba004462be8?auto=format&fit=crop&q=80&w=2000') no-repeat center center fixed !important;
+        background-size: cover !important;
+    }
+    .glass-card {
+        background-color: rgba(30, 30, 30, 0.6) !important;
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+</style>
+
+<div class="container mt-4 mb-4">
+    <h1 class="display-5 fw-bold text-white text-center mb-4">Poznaj nasze korty</h1>
+    
+    <div class="alert alert-secondary border-secondary text-center shadow-sm rounded-4 mb-5" style="background-color: #1e1e1e;">
+        <span class="fs-5 text-light opacity-75">
+         <strong>Informacja:</strong> Każdy obiekt w każdym mieście posiada dokładnie takie same korty o identycznym standardzie!
+        </span>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-success rounded-4 overflow-hidden d-flex flex-column" style="background-color: #1e1e1e;">
+                <img src="https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&q=80&w=800" class="card-img-top" alt="Trawiasty kort tenisowy" style="height: 220px; object-fit: cover;">
+                <div class="card-body p-4 text-center d-flex flex-column">
+                    <h3 class="card-title fw-bold text-success mb-3">Kort Północny</h3>
+                    <h5 class="text-light opacity-75 mb-4">Nawierzchnia: Trawiasty</h5>
+                    <p class="text-light opacity-75 text-start flex-grow-1" style="line-height: 1.7;">
+                        Najszybsza i najbardziej prestiżowa nawierzchnia, inspirowana kortami Wimbledonu. Idealna dla graczy preferujących dynamiczny styl gry, płaskie uderzenia i częste wizyty przy siatce. Niskie odbicie piłki gwarantuje szybkie tempo meczu.
+                    </p>
+                    @if (idKort1 != 0) {
+                        <a asp-controller="Rezerwacje" asp-action="Create" asp-route-kortId="@idKort1" class="btn btn-success fw-bold text-uppercase mt-3 w-100 shadow-sm">Zarezerwuj ten kort</a>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-success rounded-4 overflow-hidden d-flex flex-column" style="background-color: #1e1e1e;">
+                <img src="https://plus.unsplash.com/premium_photo-1745951329442-988db7026213?q=80&w=2066&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="Rakiety i piłki tenisowe na korcie" style="height: 220px; object-fit: cover;">
+                <div class="card-body p-4 text-center d-flex flex-column">
+                    <h3 class="card-title fw-bold text-success mb-3">Kort Zachodni</h3>
+                    <h5 class="text-light opacity-75 mb-4">Nawierzchnia: Mączka</h5>
+                    <p class="text-light opacity-75 text-start flex-grow-1" style="line-height: 1.7;">
+                        Klasyczna, wolniejsza nawierzchnia ceglana. Wybacza błędy, pozwala na długie wymiany z głębi kortu i efektowne doślizgi. To najpopularniejszy wybór profesjonalistów ceniących taktykę, mocną rotację i grę defensywną.
+                    </p>
+                    @if (idKort2 != 0) {
+                        <a asp-controller="Rezerwacje" asp-action="Create" asp-route-kortId="@idKort2" class="btn btn-success fw-bold text-uppercase mt-3 w-100 shadow-sm">Zarezerwuj ten kort</a>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-success rounded-4 overflow-hidden d-flex flex-column" style="background-color: #1e1e1e;">
+                <img src="https://images.unsplash.com/photo-1660463529933-1d0f6fcfce1f?q=80&w=1548&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="Trening tenisowy na korcie ceglanym" style="height: 220px; object-fit: cover;">
+                <div class="card-body p-4 text-center d-flex flex-column">
+                    <h3 class="card-title fw-bold text-success mb-3">Kort Rekreacyjny</h3>
+                    <h5 class="text-light opacity-75 mb-4">Nawierzchnia: Mączka</h5>
+                    <p class="text-light opacity-75 text-start flex-grow-1" style="line-height: 1.7;">
+                        Znakomity wybór dla amatorów, osób początkujących oraz na treningi z trenerem. Miękka nawierzchnia jest bardzo bezpieczna dla stawów, a nieco spokojniejsze tempo gry ułatwia naukę prawidłowej techniki uderzeń.
+                    </p>
+                    @if (idKort3 != 0) {
+                        <a asp-controller="Rezerwacje" asp-action="Create" asp-route-kortId="@idKort3" class="btn btn-success fw-bold text-uppercase mt-3 w-100 shadow-sm">Zarezerwuj ten kort</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

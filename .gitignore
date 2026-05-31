@@ -1,0 +1,14 @@
+# Foldery Visual Studio i .NET
+.vs/
+bin/
+obj/
+*.user
+*.suo
+
+# Baza danych
+*.db
+*.sqlite
+*.sqlite3
+
+# Pakiety NuGet
+packages/

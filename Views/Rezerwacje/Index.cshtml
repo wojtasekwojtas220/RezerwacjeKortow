@@ -1,0 +1,53 @@
+@model IEnumerable<RezerwacjeKortow.Models.RezerwacjaKortu>
+
+<h2 class="mb-4">Moje Rezerwacje</h2>
+
+<div class="table-responsive">
+    <table class="table table-hover shadow-sm align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Kort</th>
+                <th>Miasto</th>
+                <th>Data i godzina</th>
+                <th>Czas gry</th>
+                <th>Koszt całkowity</th>
+                <th>Status</th>
+                <th class="text-end">Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model!) {
+                var kosztCałkowity = (item.Kort?.CenaZaGodzine ?? 0) * item.CzasTrwania;
+                <tr>
+                    <td class="fw-bold">@item.Kort?.Nazwa</td>
+                    <td>@item.Miasto</td>
+                    <td>@item.DataRozpoczecia.ToString("dd.MM.yyyy HH:mm")</td>
+                    <td>@item.CzasTrwania godz.</td>
+                    <td class="fw-bold text-success">@kosztCałkowity PLN</td>
+                    <td>
+                        @if(item.Status == RezerwacjeKortow.Models.StatusRezerwacji.Oczekujaca) {
+                            <span class="badge bg-warning text-dark">Oczekująca</span>
+                        } else if(item.Status == RezerwacjeKortow.Models.StatusRezerwacji.Zatwierdzona) {
+                            <span class="badge bg-success">Zatwierdzona</span>
+                        } else if(item.Status == RezerwacjeKortow.Models.StatusRezerwacji.Odrzucona) {
+                            <span class="badge bg-danger">Odrzucona</span>
+                        } else {
+                            <span class="badge bg-secondary">Anulowana</span>
+                        }
+                    </td>
+                    <td class="text-end">
+                        @if (item.DataRozpoczecia > DateTime.Now && 
+                             item.Status != RezerwacjeKortow.Models.StatusRezerwacji.Anulowana && 
+                             item.Status != RezerwacjeKortow.Models.StatusRezerwacji.Odrzucona)
+                        {
+                            <form asp-action="Anuluj" method="post" onsubmit="return confirm('Czy na pewno chcesz anulować tę rezerwację?');">
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Odwołaj rezerwację</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

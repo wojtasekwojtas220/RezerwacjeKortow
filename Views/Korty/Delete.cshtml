@@ -1,0 +1,20 @@
+@model RezerwacjeKortow.Models.Kort
+
+<h2 class="text-danger mb-4">Usuń Kort</h2>
+<div class="card shadow-sm p-4">
+    <h4>Czy na pewno chcesz usunąć ten kort?</h4>
+    <hr />
+    <dl class="row fs-5">
+        <dt class="col-sm-3">Nazwa:</dt>
+        <dd class="col-sm-9 fw-bold">@Model.Nazwa</dd>
+        <dt class="col-sm-3">Opis:</dt>
+        <dd class="col-sm-9">@Model.Opis</dd>
+        <dt class="col-sm-3">Cena/h:</dt>
+        <dd class="col-sm-9">@Model.CenaZaGodzine PLN</dd>
+    </dl>
+    <form asp-action="Delete" class="mt-4">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Potwierdź usunięcie</button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Powrót</a>
+    </form>
+</div>
